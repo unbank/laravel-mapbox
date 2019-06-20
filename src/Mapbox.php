@@ -4,8 +4,6 @@ namespace Bakerkretzmar\LaravelMapbox;
 
 use RunTimeException;
 
-use Zttp\Zttp;
-
 class Mapbox
 {
     /**
