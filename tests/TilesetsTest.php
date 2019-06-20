@@ -17,10 +17,10 @@ class TilesetsTest extends TestCase
     }
 
     /** @test */
-    public function delete_tileset()
-    {
-        $response = Mapbox::tilesets('test_tileset_4')->delete();
+    // public function delete_tileset()
+    // {
+    //     $response = Mapbox::tilesets('test_tileset_4')->delete();
 
-        $this->assertTrue($response);
-    }
+    //     $this->assertTrue($response);
+    // }
 }
