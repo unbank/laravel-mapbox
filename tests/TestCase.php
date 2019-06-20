@@ -48,6 +48,19 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $this->assertArrayHasKey('properties', $response);
     }
 
+    protected function assertValidUploadResponse(array $response)
+    {
+        $this->assertArrayHasKey('id', $response);
+        $this->assertArrayHasKey('name', $response);
+        $this->assertArrayHasKey('complete', $response);
+        $this->assertArrayHasKey('error', $response);
+        $this->assertArrayHasKey('created', $response);
+        $this->assertArrayHasKey('modified', $response);
+        $this->assertArrayHasKey('tileset', $response);
+        $this->assertArrayHasKey('owner', $response);
+        $this->assertArrayHasKey('progress', $response);
+    }
+
     protected function cleanupTestDatasets(array $datasets)
     {
         foreach ($datasets as $id) {
