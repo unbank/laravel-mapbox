@@ -127,41 +127,55 @@ Mapbox::features($dataset_id, $feature_id)->delete();
 $tilesets = Mapbox::tilesets()->list();
 ```
 
+**Delete a Tileset:**
+
+```php
+Mapbox::tilesets($tileset)->delete();
+```
+
 ### Uploads
 
 [Mapbox documentation.](https://docs.mapbox.com/api/maps/#uploads)
 
-[Work in progress.]
+**Get temporary S3 credentials:**
 
-<!-- **Get S3 Credentials:**
-```
-// Returns S3Credentials Object
-$response = Mapbox::uploads()->credentials();
+```php
+$credentials = Mapbox::uploads()->credentials();
 ```
 
-**Create Upload:**
-```
-$response = Mapbox::uploads()->create([
-	'tileset' => '{username}.mytilesetid',
-	'url' => 'mapbox://datasets/{username}/{dataset}', // Or S3 Bucket URL from S3Credentials Object
-	'name' => 'Upload Name'
+**Create an Upload:**
+
+```php
+$upload = Mapbox::uploads()->create([
+    'tileset' => 'my_tileset_name',
+    'url' => 'http://{bucket}.s3.amazonaws.com/{key}',
+    'name' => 'My Tileset',
+]);
+// or
+$upload = Mapbox::uploads()->create([
+    'tileset' => 'my_tileset_name',
+    'dataset' => 'my_dataset_id',
+    'name' => 'My Tileset',
 ]);
 ```
 
-**Retrieve Upload Status:**
-```
-$response = Mapbox::uploads($uploadID)->get();
+**Retrieve an Upload’s status:**
+
+```php
+$upload = Mapbox::uploads($upload_id)->get();
 ```
 
-**List Upload Statuses:**
-```
-$list = Mapbox::uploads()->list();
+**List Upload statuses:**
+
+```php
+$uploads = Mapbox::uploads()->list();
 ```
 
-**Delete Upload:**
+**Delete an Upload:**
+
+```php
+Mapbox::uploads($upload_id)->delete();
 ```
-$response = Mapbox::uploads($uploadID)->delete();
-``` -->
 
 Testing
 -------
