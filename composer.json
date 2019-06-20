@@ -1,16 +1,24 @@
 {
-    "name": "bluevertex/mapbox-api-laravel",
-    "description": "A Laravel 5+ Package for managing Mapbox Datasets and Tilesets",
+    "name": "bakerkretzmar/laravel-mapbox",
+    "description": "A Laravel package for managing Mapbox Datasets and Tilesets.",
+    "keywords": ["laravel", "mapbox"],
+    "homepage": "https://github.com/bakerkretzmar/laravel-mapbox",
     "type": "library",
-    "require": {
-        "php": ">=7.0.0",
-        "illuminate/contracts": "^5.5",
-        "illuminate/support": "^5.5",
-        "kitetail/zttp": "^0.3.0",
-        "jmikola/geojson": "^1.0"
-    },
     "license": "MIT",
+    "require": {
+        "php": "^7.2",
+        "kitetail/zttp": "^0.6.0"
+    },
+    "require-dev": {
+        "codedungeon/phpunit-result-printer": "^0.26.2",
+        "orchestra/testbench": "^3.8",
+        "phpunit/phpunit": "^8.2"
+    },
     "authors": [
+        {
+            "name": "Jacob Baker-Kretzmar",
+            "email": "jacob@bakerkretzmar.ca"
+        },
         {
             "name": "Matt Fox",
             "email": "matt.fox@thebluevertex.com"
@@ -18,30 +26,30 @@
     ],
     "autoload": {
         "psr-4": {
-            "BlueVertex\\MapBoxAPILaravel\\": "src/"
+            "Bakerkretzmar\\LaravelMapbox\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BlueVertex\\MapBoxAPILaravel\\Tests\\": "tests/"
+            "Bakerkretzmar\\LaravelMapbox\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BlueVertex\\MapBoxAPILaravel\\MapBoxAPILaravelServiceProvider"
+                "Bakerkretzmar\\LaravelMapbox\\LaravelMapboxServiceProvider"
             ],
             "aliases": {
-                "Mapbox": "BlueVertex\\MapBoxAPILaravel\\Facades\\Mapbox"
+                "Mapbox": "Bakerkretzmar\\LaravelMapbox\\Facades\\Mapbox"
             }
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "vendor/bin/phpunit"
     },
-    "require-dev": {
-        "orchestra/testbench": "~3.5",
-        "phpunit/phpunit": "^6.5",
-        "codedungeon/phpunit-result-printer": "^0.4.4"
-    }
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueVertex\MapBoxAPILaravel\Models;
+namespace Bakerkretzmar\LaravelMapbox\Models;
 
 class S3Credentials extends JSONModel
 {

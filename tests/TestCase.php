@@ -1,44 +1,57 @@
 <?php
 
-namespace BlueVertex\MapBoxAPILaravel\Tests;
+namespace Bakerkretzmar\LaravelMapbox\Tests;
 
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Mapbox;
+use Bakerkretzmar\LaravelMapbox\LaravelMapboxServiceProvider;
 
-/**
-* Test submitting a dataset
-*/
-class TestCase extends OrchestraTestCase
+abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
-    protected $testDataset;
-    protected $testUsername;
-
     protected function getPackageProviders($app)
     {
-        return ['BlueVertex\MapBoxAPILaravel\MapBoxAPILaravelServiceProvider'];
+        return [LaravelMapboxServiceProvider::class];
     }
 
     protected function getPackageAliases($app)
     {
-        return [
-            'Mapbox' => 'BlueVertex\MapBoxAPILaravel\Facades\Mapbox'
-        ];
+        return ['Mapbox' => 'Bakerkretzmar\LaravelMapbox\Facades\Mapbox'];
     }
 
     protected function getEnvironmentSetUp($app)
     {
-        if (file_exists(dirname(__DIR__) . '/.env.test')) {
-            (new \Dotenv\Dotenv(dirname(__DIR__), '.env.test'))->load();
+        if (empty(getenv('CI'))) {
+            \Dotenv\Dotenv::create(__DIR__ . '/..', '.env.testing')->load();
         }
 
-        $app['config']->set('mapbox', [
-            'api_url'         => 'api.mapbox.com',
-            'api_version'     => 'v1',
-            'use_ssl'         => true,
-            'username'        => getenv('MAPBOX_USERNAME'),
-            'access_token'    => getenv('MAPBOX_ACCESS_TOKEN')
-        ]);
+        config(['laravel-mapbox.username' => getenv('MAPBOX_USERNAME')]);
+        config(['laravel-mapbox.token' => getenv('MAPBOX_TOKEN')]);
+    }
 
-        $this->testUsername = getenv('MAPBOX_USERNAME');
-        $this->testDataset = getenv('MAPBOX_TEST_DATASET_ID');
+    protected function assertValidDatasetResponse(array $response)
+    {
+        $this->assertArrayHasKey('owner', $response);
+        $this->assertArrayHasKey('id', $response);
+        $this->assertArrayHasKey('name', $response);
+        $this->assertArrayHasKey('description', $response);
+        $this->assertArrayHasKey('created', $response);
+        $this->assertArrayHasKey('modified', $response);
+        $this->assertArrayHasKey('features', $response);
+        $this->assertArrayHasKey('size', $response);
+        $this->assertArrayHasKey('bounds', $response);
+    }
+
+    protected function assertValidFeatureResponse(array $response)
+    {
+        $this->assertArrayHasKey('id', $response);
+        $this->assertArrayHasKey('type', $response);
+        $this->assertArrayHasKey('geometry', $response);
+        $this->assertArrayHasKey('properties', $response);
+    }
+
+    protected function cleanupTestDatasets(array $datasets)
+    {
+        foreach ($datasets as $id) {
+            Mapbox::datasets($id)->delete();
+        }
     }
 }

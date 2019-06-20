@@ -1,104 +1,73 @@
 <?php
 
-namespace BlueVertex\MapBoxAPILaravel;
+namespace Bakerkretzmar\LaravelMapbox;
+
+use Bakerkretzmar\LaravelMapbox\Models\S3Credentials;
 
 use RunTimeException;
-use Illuminate\Config\Repository as Config;
+
 use Zttp\Zttp;
 use Zttp\ZttpResponse;
-use \BlueVertex\MapBoxAPILaravel\MapboxFeatures;
-use \BlueVertex\MapBoxAPILaravel\Models\S3Credentials;
 
 class Mapbox
 {
     /**
-     * Request Types
+     * Mapbox API endpoint names and status codes.
      */
-    const DATASET = 'datasets';
-    const TILESET = 'tilesets';
-    const UPLOAD  = 'uploads';
+    const DATASETS_ENDPOINT = 'datasets';
+    const TILESETS_ENDPOINT = 'tilesets';
+    const FEATURES_ENDPOINT = 'features';
+    const UPLOADS_ENDPOINT = 'uploads';
+    const DELETE_SUCCESS_STATUS = 204;
+
+    protected $config;
 
     /**
-     * Config Values
-     * @var object
+     * Create a new instance of the Mapbox API wrapper.
+     *
+     * @param  array  $config
      */
-    private $mconfig;
-
-    /**
-     * Current Data Type
-     * @var string
-     */
-    private $currentType;
-
-    private $id;
-
-    public function __construct(Config $config)
+    public function __construct(array $config = [])
     {
-        if ($config->has('mapbox::config'))
-        {
-            $this->mconfig = $config->get('mapbox::config');
-        }
-        else if ($config->get('mapbox'))
-        {
-            $this->mconfig = $config->get('mapbox');
-        }
-        else
-        {
-            throw new RunTimeException('No config found');
-        }
-    }
-
-    public function test()
-    {
-        return $this;
-    }
-
-    public function getUrl($type, $id = null, $options = [])
-    {
-        $parts = [
-            $this->mconfig['api_url'],
-            $type,
-            $this->mconfig['api_version'],
-            $this->mconfig['username']
-        ];
-
-        if ($id != null)
-        {
-            $parts[] = $id;
-        }
-
-        if (!empty($options))
-        {
-            $parts = array_merge($parts, $options);
-        }
-
-        return ($this->mconfig['use_ssl'] ? 'https://' : 'http://') . implode('/', $parts) . '?access_token=' . $this->mconfig['access_token'];
+        $this->config = $config;
     }
 
     /**
-     * Set API to work with Datasets
-     * @param  string $id    Optional
-     * @return Mapbox Class
+     * Create a new Datasets request.
+     *
+     * @param   string|null  $dataset_id
+     * @return  Datasets
      */
-    public function datasets($id = null)
+    public function datasets(string $dataset_id = null)
     {
-        $this->currentType = Mapbox::DATASET;
-        $this->id = $id;
-
-        return $this;
+        return new Datasets($dataset_id);
     }
 
     /**
-     * Set API to work with Tilesets
-     * @param  string $id    Optional
-     * @return Mapbox Class
+     * Shortcut to create a new Features request for a given Dataset.
+     *
+     * @param   string       $dataset_id
+     * @param   string|null  $feature_id
+     * @return  Features
      */
-    public function tilesets($id = null)
+    public function features(string $dataset_id, string $feature_id = null)
     {
-        $this->currentType = Mapbox::TILESET;
-        $this->id = $id;
+        if (! $dataset_id) {
+            throw new RunTimeException('Dataset ID required');
+        }
 
-        return $this;
+        return new Features($dataset_id, $feature_id);
+    }
+
+    /**
+     * Create a new Tilesets request.
+     *
+     * @param   string|null  $tileset_id
+     * @return  Tilesets
+     */
+    public function tilesets(string $tileset_id = null)
+    {
+        return new Tilesets($tileset_id);
     }
 
     /**
@@ -109,78 +78,76 @@ class Mapbox
     public function uploads($id = null)
     {
         $this->currentType = Mapbox::UPLOAD;
-        $this->id = $id;
+        $this->dataset_id = $id;
 
         return $this;
     }
 
-    public function list($options = [])
-    {
-        if (count($options) && $this->currentType == Mapbox::DATASET)
-        {
-            throw new RunTimeException('Dataset listing does not support parameters');
-        }
+    // public function list($options = [])
+    // {
+    //     if (count($options) && $this->currentType == Mapbox::DATASET)
+    //     {
+    //         throw new RunTimeException('Dataset listing does not support parameters');
+    //     }
 
-        $response = Zttp::get($this->getUrl($this->currentType), $options);
+    //     $response = Zttp::get($this->getUrl($this->currentType), $options);
 
-        return $response->json();
-    }
+    //     return $response->json();
+    // }
 
-    public function create($data)
-    {
-        $response = Zttp::post($this->getUrl($this->currentType), $data);
+    // public function create(array $data = [])
+    // {
+    //     $response = Zttp::post($this->getUrl($this->currentType), $data);
 
-        return $response->json();
-    }
+    //     return $response->json();
+    // }
 
-    public function get()
-    {
-        if ($this->id == null)
-        {
-            throw new RunTimeException('Dataset ID Required');
-        }
+    // public function get()
+    // {
+    //     if ($this->dataset_id == null)
+    //     {
+    //         throw new RunTimeException('Dataset ID Required');
+    //     }
 
-        $response = Zttp::get($this->getUrl($this->currentType, $this->id));
+    //     $response = Zttp::get($this->getUrl($this->currentType, $this->dataset_id));
 
-        return $response->json();
-    }
+    //     return $response->json();
+    // }
 
-    public function update($data)
-    {
-        if ($this->id == null)
-        {
-            throw new RunTimeException('Dataset ID Required');
-        }
+    // public function update($data)
+    // {
+    //     if ($this->dataset_id == null)
+    //     {
+    //         throw new RunTimeException('Dataset ID Required');
+    //     }
 
-        $response = Zttp::patch($this->getUrl($this->currentType, $this->id), $data);
+    //     $response = Zttp::patch($this->getUrl($this->currentType, $this->dataset_id), $data);
 
-        return $response->json();
-    }
+    //     return $response->json();
+    // }
 
-    public function delete()
-    {
-        if ($this->id == null)
-        {
-            throw new RunTimeException('Dataset ID Required');
-        }
+    // public function delete()
+    // {
+    //     if (! $this->dataset_id) {
+    //         throw new RunTimeException('Dataset ID required');
+    //     }
 
-        return Zttp::delete($this->getUrl($this->currentType, $this->id));
-    }
+    //     return Zttp::delete($this->getUrl($this->currentType, $this->dataset_id));
+    // }
 
-    public function features($featureID = null)
-    {
-        if ($this->currentType !== Mapbox::DATASET)
-        {
-            throw new RunTimeException('Features only work with Datasets');
-        }
+    // public function features($feature_id = null)
+    // {
+    //     if ($this->currentType !== Mapbox::DATASET)
+    //     {
+    //         throw new RunTimeException('Features only work with Datasets');
+    //     }
 
-        if ($this->id == null)
-        {
-            throw new RunTimeException('Dataset ID Required');
-        }
+    //     if (! $this->dataset_id) {
+    //         throw new RunTimeException('Dataset ID required');
+    //     }
 
-        return new MapboxFeatures($this->id, $featureID);
-    }
+    //     return new Features($this->dataset_id, $feature_id);
+    // }
 
     /**
      * Get Temporary S3 Credentials (UPLOADS ONLY)
