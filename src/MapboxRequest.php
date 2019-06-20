@@ -6,9 +6,11 @@ abstract class MapboxRequest
 {
     protected $dataset_id;
 
-    protected $tileset_id;
-
     protected $feature_id;
+
+    protected $tileset;
+
+    protected $upload_id;
 
     protected function url(string $endpoint, string $id = null, array $options = [])
     {
@@ -16,8 +18,11 @@ abstract class MapboxRequest
             config('laravel-mapbox.url'),
             $endpoint,
             config('laravel-mapbox.version'),
-            config('laravel-mapbox.username'),
         ];
+
+        if ($endpoint !== Mapbox::TILESETS_ENDPOINT) {
+            $segments[] = config('laravel-mapbox.username');
+        }
 
         if ($id) {
             $segments[] = $id;

@@ -13,9 +13,9 @@ class Tilesets extends MapboxRequest
      *
      * @param  string|null  $tileset_id
      */
-    public function __construct(string $tileset_id = null)
+    public function __construct(string $tileset = null)
     {
-        $this->tileset_id = $tileset_id;
+        $this->tileset = $tileset;
     }
 
     /**
@@ -27,5 +27,20 @@ class Tilesets extends MapboxRequest
     public function list()
     {
         return Zttp::get($this->url(Mapbox::TILESETS_ENDPOINT))->json();
+    }
+
+    /**
+     * Delete a Tileset.
+     *
+     * @see     https://docs.mapbox.com/api/maps/#delete-tileset
+     * @return  bool
+     */
+    public function delete()
+    {
+        if (! $this->tileset) {
+            throw new RunTimeException('Tileset name required');
+        }
+
+        return Zttp::delete($this->url(Mapbox::TILESETS_ENDPOINT, config('laravel-mapbox.username') . '.' . $this->tileset))->status() === Mapbox::DELETE_SUCCESS_STATUS;
     }
 }
