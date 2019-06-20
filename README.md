@@ -1,134 +1,141 @@
-# Mapbox API for Laravel 5+
+Laravel Mapbox
+==============
 
-[![Build Status](https://travis-ci.org/BlueVertex/mapbox-api-laravel.svg)](https://travis-ci.org/BlueVertex/mapbox-api-laravel)
-[![Latest Stable Version](https://poser.pugx.org/bluevertex/mapbox-api-laravel/v/stable)](https://packagist.org/packages/bluevertex/mapbox-api-laravel)
-[![Latest Unstable Version](https://poser.pugx.org/bluevertex/mapbox-api-laravel/v/unstable)](https://packagist.org/packages/bluevertex/mapbox-api-laravel)
-[![Monthly Downloads](https://poser.pugx.org/bluevertex/mapbox-api-laravel/d/monthly)](https://packagist.org/packages/bluevertex/mapbox-api-laravel)
-[![License](https://poser.pugx.org/bluevertex/mapbox-api-laravel/license)](https://packagist.org/packages/bluevertex/mapbox-api-laravel)
+[![Build status](https://img.shields.io/travis/com/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://travis-ci.org/bakerkretzmar/laravel-mapbox)
+[![StyleCI](https://github.styleci.io/repos/192925375/shield?branch=master&style=flat)](https://github.styleci.io/repos/192925375)
+[![Latest stable version](https://img.shields.io/packagist/v/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
+[![Total downloads](https://img.shields.io/packagist/dt/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
+[![MIT license](https://img.shields.io/packagist/l/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://github.com/bakerkretzmar/laravel-mapbox/blob/master/LICENSE)
 
-A [Laravel](https://laravel.com/) 5+ Package for managing [Mapbox](https://www.mapbox.com/api-documentation/) Datasets and Tilesets
+A lightweight wrapper to make working with [Mapbox](https://docs.mapbox.com/api/maps) Maps service APIs in [Laravel](https://laravel.com) apps a breeze.
 
-This library supports the listing, creation, and deletion of the following types via the Mapbox API:
+This package is based on Matt Fox’s [`mapbox-api-laravel`](https://github.com/BlueVertex/mapbox-api-laravel).
 
-1. [Datasets](https://www.mapbox.com/api-documentation/#datasets)
-2. [Tilesets](https://www.mapbox.com/api-documentation/#tilesets)
-3. [Uploads](https://www.mapbox.com/api-documentation/#uploads)
+This package supports managing the following services via the Mapbox API:
 
-## Installation
+[Datasets](#datasets) • [Features](#features) • [Tilesets](#tilesets) • [Uploads](#uploads)
 
-**Install Via Composer:**
-```
-composer require bluevertex/mapbox-api-laravel
-```
+Installation
+------------
 
-**Laravel 5.5+**
-
-The service provider should be automatically registered.
-
-**Laravel ≤ 5.4:**
-```
-// Laravel: config/app.php
-BlueVertex\MapBoxAPILaravel\MapBoxAPILaravelServiceProvider::class
+```bash
+composer require bakerkretzmar/laravel-mapbox
 ```
 
-```
-// Facade Alias
-'Mapbox' => BlueVertex\MapBoxAPILaravel\Facades\Mapbox::class,
-```
-
-**Lumen:**
-```
-// bootstrap/app.php:
-$app->register(BlueVertex\MapBoxAPILaravel\MapBoxAPILaravelServiceProvider::class);
-
-$app->withFacades(true, [
-    'BlueVertex\MapBoxAPILaravel\Facades\Mapbox' => 'Mapbox'
-]);
-```
-
-
-## Configuration
+Configuration
+-------------
 
 Add the following to your `.env` file:
 
-```
-MAPBOX_ACCESS_TOKEN=[Your Mapbox Access Token]
-MAPBOX_USERNAME=[Your Mapbox Username]
+```bash
+MAPBOX_USERNAME={your Mapbox username}
+MAPBOX_TOKEN={your Mapbox access token}
 ```
 
-*Note: Make sure your Access Token has the proper scope for all the operations you need to perform.*
+Optionally, you can publish the package’s config file:
 
-## Usage
+```bash
+php artisan vendor:publish --provider="bakerkretzmar\LaravelMapbox\LaravelMapboxServiceProvider"
+```
+
+Usage
+-----
 
 ### Datasets
 
+[Mapbox documentation.](https://docs.mapbox.com/api/maps/#datasets)
+
 **List Datasets:**
-```
-$list = Mapbox::datasets()->list();
+
+```php
+$datasets = Mapbox::datasets()->list();
 ```
 
-**Create Dataset:**
+**Retrieve a Dataset:**
+
+```php
+$dataset = Mapbox::datasets($dataset_id)->get();
 ```
+
+**Create a Dataset:**
+
+```php
+$dataset = Mapbox::datasets()->create();
+// or
 $dataset = Mapbox::datasets()->create([
-	'name' => 'My Dataset',
-	'description' => 'This is my dataset'
+    'name' => 'My Dataset',
+    'description' => 'A new Mapbox Dataset',
 ]);
 ```
 
-**Retrieve Dataset:**
-```
-$dataset = Mapbox::datasets($datasetID)->get();
-```
+**Update a Dataset:**
 
-**Update Dataset:**
-```
-$dataset = Mapbox::datasets($datasetID)->update([
-	'name' => 'My Dataset Updated',
-	'description' => 'This is my latest dataset'
+```php
+$dataset = Mapbox::datasets($dataset_id)->update([
+    'name' => 'My Updated Dataset',
+    'description' => 'An updated Mapbox Dataset',
 ]);
 ```
 
-**Delete Dataset:**
-```
-$response = Mapbox::datasets($datasetID)->delete();
+**Delete a Dataset:**
+
+```php
+Mapbox::datasets($dataset_id)->delete();
 ```
 
-**List Feature:**
-```
-$response = Mapbox::datasets($datasetID)->features()->list();
+### Features
+
+[Mapbox documentation.](https://docs.mapbox.com/api/maps/#list-features)
+
+**List Features:**
+
+```php
+$features = Mapbox::datasets($dataset_id)->features()->list();
+// or
+$features = Mapbox::features($dataset_id)->list();
 ```
 
-**Insert or Update Feature:**
-```
-$response = Mapbox::datasets($datasetID)->features()->add($feature);
+**Retrieve a Feature:**
+
+```php
+$feature = Mapbox::datasets($dataset_id)->features($feature_id)->get();
+// or
+$feature = Mapbox::features($dataset_id, $feature_id)->get();
 ```
 
-**Retrieve Feature:**
-```
-$response = Mapbox::datasets($datasetID)->features($featureID)->get();
+**Create or update a Feature:**
+
+```php
+$feature = Mapbox::datasets($dataset_id)->features()->add($feature);
+// or
+$feature = Mapbox::features($dataset_id)->add($feature);
 ```
 
-**Delete Feature:**
-```
-$response = Mapbox::datasets($datasetID)->features($featureID)->delete();
+**Delete a Feature:**
+
+```php
+Mapbox::datasets($dataset_id)->features($feature_id)->delete();
+// or
+Mapbox::features($dataset_id, $feature_id)->delete();
 ```
 
 ### Tilesets
 
+[Mapbox documentation.](https://docs.mapbox.com/api/maps/#tilesets)
+
 **List Tilesets:**
-```
-// Options array is optional
-$list = Mapbox::tilesets()->list([
-	'type' 			=> 'raster',
-	'visibility' 	=> 'public',
-	'sortby' 		=> 'modified',
-	'limit' 		=> 500
-]);
+
+```php
+$tilesets = Mapbox::tilesets()->list();
 ```
 
 ### Uploads
 
-**Get S3 Credentials:**
+[Mapbox documentation.](https://docs.mapbox.com/api/maps/#uploads)
+
+[Work in progress.]
+
+<!-- **Get S3 Credentials:**
 ```
 // Returns S3Credentials Object
 $response = Mapbox::uploads()->credentials();
@@ -156,5 +163,28 @@ $list = Mapbox::uploads()->list();
 **Delete Upload:**
 ```
 $response = Mapbox::uploads($uploadID)->delete();
+``` -->
+
+Testing
+-------
+
+Before testing the package, create a local `.env.testing` file with valid Mapbox credentials.
+
+```bash
+composer test
 ```
 
+Changelog
+---------
+
+See the [CHANGELOG](CHANGELOG.md) for information about what has changed recently.
+
+Security
+--------
+
+If you discover any security related issues, please email <jacobtbk@gmail.com> instead of using the issue tracker.
+
+License
+-------
+
+This package is licensed under the MIT License (MIT). Please see the [LICENSE](LICENSE.md) for details.
