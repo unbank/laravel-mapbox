@@ -12,7 +12,7 @@ class LaravelMapboxServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/laravel-mapbox.php' => config_path('laravel-mapbox.php'),
-        ], 'config');
+        ]);
     }
 
     public function register()
