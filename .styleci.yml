@@ -3,3 +3,7 @@ preset: laravel
 finder:
   exclude:
     - "tests"
+
+disabled:
+  - concat_without_spaces
+  - length_ordered_imports
