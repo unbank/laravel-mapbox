@@ -2,12 +2,9 @@
 
 namespace Bakerkretzmar\LaravelMapbox;
 
-use Bakerkretzmar\LaravelMapbox\Models\S3Credentials;
-
 use RunTimeException;
 
 use Zttp\Zttp;
-use Zttp\ZttpResponse;
 
 class Mapbox
 {

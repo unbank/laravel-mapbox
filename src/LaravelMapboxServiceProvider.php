@@ -2,8 +2,6 @@
 
 namespace Bakerkretzmar\LaravelMapbox;
 
-use Bakerkretzmar\LaravelMapbox\Mapbox;
-
 use Illuminate\Support\ServiceProvider;
 
 class LaravelMapboxServiceProvider extends ServiceProvider
