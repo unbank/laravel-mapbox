@@ -7,9 +7,7 @@ Laravel Mapbox
 [![Total downloads](https://img.shields.io/packagist/dt/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
 [![MIT license](https://img.shields.io/packagist/l/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://github.com/bakerkretzmar/laravel-mapbox/blob/master/LICENSE)
 
-A lightweight wrapper to make working with [Mapbox](https://docs.mapbox.com/api/maps) Maps service APIs in [Laravel](https://laravel.com) apps a breeze.
-
-This package is based on Matt Fox’s [`mapbox-api-laravel`](https://github.com/BlueVertex/mapbox-api-laravel).
+A lightweight wrapper to make working with [Mapbox](https://docs.mapbox.com/api/maps) Maps service APIs in [Laravel](https://laravel.com) apps a breeze. Based on Matt Fox’s [`mapbox-api-laravel`](https://github.com/BlueVertex/mapbox-api-laravel).
 
 This package supports managing the following services via the Mapbox API:
 
