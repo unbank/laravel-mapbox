@@ -36,6 +36,20 @@ class FeaturesTest extends TestCase
     }
 
     /** @test */
+    public function access_features_directly_using_shortcut()
+    {
+        $dataset = Mapbox::datasets()->create();
+        $feature = json_decode(file_get_contents(__DIR__ . '/__fixtures__/feature.json'));
+        Mapbox::features($dataset['id'], '123')->insert($feature);
+
+        $response = Mapbox::features($dataset['id'], '123')->get();
+
+        $this->assertValidFeatureResponse($response);
+
+        $this->cleanupTestDatasets([$dataset['id']]);
+    }
+
+    /** @test */
     public function insert_feature()
     {
         $dataset = Mapbox::datasets()->create();
