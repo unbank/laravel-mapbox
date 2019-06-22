@@ -41,6 +41,10 @@ class Tilesets extends MapboxRequest
             throw new RunTimeException('Tileset name required');
         }
 
-        return Zttp::delete($this->url(Mapbox::TILESETS_ENDPOINT, config('laravel-mapbox.username') . '.' . $this->tileset))->status() === Mapbox::DELETE_SUCCESS_STATUS;
+        $url = $this->url(Mapbox::TILESETS_ENDPOINT);
+        [$url_before, $url_after] = explode('?', $url);
+        $url = $url_before . '.' . $this->tileset . '?' . $url_after;
+
+        return Zttp::delete($url)->status() === Mapbox::DELETE_SUCCESS_STATUS;
     }
 }

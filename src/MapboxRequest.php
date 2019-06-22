@@ -18,11 +18,8 @@ abstract class MapboxRequest
             config('laravel-mapbox.url'),
             $endpoint,
             config('laravel-mapbox.version'),
+            config('laravel-mapbox.username'),
         ];
-
-        if ($endpoint !== Mapbox::TILESETS_ENDPOINT) {
-            $segments[] = config('laravel-mapbox.username');
-        }
 
         if ($id) {
             $segments[] = $id;
