@@ -1,7 +1,7 @@
 Laravel Mapbox
 ==============
 
-[![Build status](https://img.shields.io/travis/com/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://travis-ci.org/bakerkretzmar/laravel-mapbox)
+[![Build status](https://travis-ci.org/bakerkretzmar/laravel-mapbox.svg?branch=master)](https://travis-ci.org/bakerkretzmar/laravel-mapbox)
 [![StyleCI](https://github.styleci.io/repos/192925375/shield?branch=master&style=flat)](https://github.styleci.io/repos/192925375)
 [![Latest stable version](https://img.shields.io/packagist/v/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
 [![Total downloads](https://img.shields.io/packagist/dt/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
