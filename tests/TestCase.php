@@ -7,6 +7,12 @@ use Bakerkretzmar\LaravelMapbox\LaravelMapboxServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
+    protected $dataset;
+
+    protected $tileset = 'test_tileset';
+
+    protected $upload;
+
     protected function getPackageProviders($app)
     {
         return [LaravelMapboxServiceProvider::class];
@@ -66,5 +72,28 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         foreach ($datasets as $id) {
             Mapbox::datasets($id)->delete();
         }
+    }
+
+    protected function getFeature()
+    {
+        return [
+            'id' => '123',
+            'type' => 'Feature',
+            'geometry' => [
+                'type' => 'Polygon',
+                'coordinates' => [
+                    [
+                        [ 100, 0 ],
+                        [ 101, 0 ],
+                        [ 101, 1 ],
+                        [ 100, 1 ],
+                        [ 100, 0 ],
+                    ],
+                ],
+            ],
+            'properties' => [
+                'property' => 'value',
+            ],
+        ];
     }
 }

@@ -8,6 +8,33 @@ use Bakerkretzmar\LaravelMapbox\Models\S3Credentials;
 
 class UploadsTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        if ($this->upload) {
+            while (isset($this->upload['complete']) && $this->upload['complete'] != true) {
+                sleep(1);
+                $this->upload = Mapbox::uploads($this->upload['id'])->get();
+            }
+
+            Mapbox::uploads($this->upload['id'])->delete();
+        }
+
+        $tilesets = Mapbox::tilesets()->list();
+
+        while (in_array('test_tileset', array_column($tilesets, 'name'))) {
+            Mapbox::tilesets('test_tileset')->delete();
+            sleep(1);
+            $tilesets = Mapbox::tilesets()->list();
+        }
+
+        if ($this->dataset) {
+            Mapbox::datasets($this->dataset['id'])
+                ->delete();
+        }
+
+        parent::tearDown();
+    }
+
     /** @test */
     public function get_credentials()
     {
@@ -24,105 +51,103 @@ class UploadsTest extends TestCase
     /** @test */
     public function create_upload_from_url()
     {
-        $dataset = Mapbox::datasets()->create();
-        Mapbox::features($dataset['id'], '123')->insert(json_decode(file_get_contents(__DIR__ . '/__fixtures__/feature.json')));
+        $this->dataset = Mapbox::datasets()->create();
+        Mapbox::features($this->dataset['id'], '123')
+            ->insert($this->getFeature());
 
-        $response = Mapbox::uploads()->create([
-            'tileset' => 'test_tileset_1',
+        $this->upload = Mapbox::uploads()->create([
+            'tileset' => $this->tileset,
             'url' => implode('/', [
                 'mapbox://datasets',
                 config('laravel-mapbox.username'),
-                $dataset['id'],
+                $this->dataset['id'],
             ]),
-            'name' => 'test_tileset_1',
+            'name' => $this->tileset,
         ]);
 
-        $this->assertValidUploadResponse($response);
-        $this->assertEquals(config('laravel-mapbox.username'), $response['owner']);
-
-        $this->cleanupTestDatasets([$dataset['id']]);
-        Mapbox::tilesets('test_tileset_1')->delete();
+        $this->assertValidUploadResponse($this->upload);
+        $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
     }
 
     /** @test */
     public function create_upload_from_dataset_id()
     {
-        $dataset = Mapbox::datasets()->create();
-        Mapbox::features($dataset['id'], '123')->insert(json_decode(file_get_contents(__DIR__ . '/__fixtures__/feature.json')));
+        $this->dataset = Mapbox::datasets()->create();
+        Mapbox::features($this->dataset['id'], '123')
+            ->insert($this->getFeature());
 
-        $response = Mapbox::uploads()->create([
-            'tileset' => 'test_tileset_2',
-            'dataset' => $dataset['id'],
-            'name' => 'test_tileset_2',
+        $this->upload = Mapbox::uploads()->create([
+            'tileset' => $this->tileset,
+            'dataset' => $this->dataset['id'],
+            'name' => $this->tileset,
         ]);
 
-        $this->assertValidUploadResponse($response);
-        $this->assertEquals(config('laravel-mapbox.username'), $response['owner']);
-
-        $this->cleanupTestDatasets([$dataset['id']]);
-        Mapbox::tilesets('test_tileset_2')->delete();
+        $this->assertValidUploadResponse($this->upload);
+        $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
     }
 
     /** @test */
     public function retrieve_upload_status()
     {
-        $dataset = Mapbox::datasets()->create();
-        Mapbox::features($dataset['id'], '123')->insert(json_decode(file_get_contents(__DIR__ . '/__fixtures__/feature.json')));
+        $this->dataset = Mapbox::datasets()->create();
+        Mapbox::features($this->dataset['id'], '123')
+            ->insert($this->getFeature());
 
-        $upload = Mapbox::uploads()->create([
-            'tileset' => 'test_tileset_3',
+        $this->upload = Mapbox::uploads()->create([
+            'tileset' => $this->tileset,
             'url' => implode('/', [
                 'mapbox://datasets',
                 config('laravel-mapbox.username'),
-                $dataset['id'],
+                $this->dataset['id'],
             ]),
-            'name' => 'test_tileset_3',
+            'name' => $this->tileset,
         ]);
 
-        $response = Mapbox::uploads($upload['id'])->get();
+        $response = Mapbox::uploads($this->upload['id'])->get();
 
         $this->assertValidUploadResponse($response);
-
-        $this->cleanupTestDatasets([$dataset['id']]);
-        Mapbox::tilesets('test_tileset_3')->delete();
     }
 
     /** @test */
     public function list_recent_upload_statuses()
     {
+        // This is tested implicitly in most of the other tests
+
         $response = Mapbox::uploads()->list();
 
-        // @todo
         $this->assertTrue(is_array($response));
     }
 
     /** @test */
     public function delete_upload()
     {
-        $dataset = Mapbox::datasets()->create();
-        Mapbox::features($dataset['id'], '123')->insert(json_decode(file_get_contents(__DIR__ . '/__fixtures__/feature.json')));
+        $this->dataset = Mapbox::datasets()->create();
+        Mapbox::features($this->dataset['id'], '123')
+            ->insert($this->getFeature());
 
-        $upload = Mapbox::uploads()->create([
-            'tileset' => 'test_tileset_4',
+        $this->upload = Mapbox::uploads()->create([
+            'tileset' => $this->tileset,
             'url' => implode('/', [
                 'mapbox://datasets',
                 config('laravel-mapbox.username'),
-                $dataset['id'],
+                $this->dataset['id'],
             ]),
-            'name' => 'test_tileset_4',
+            'name' => $this->tileset,
         ]);
 
-        while (isset($upload['complete']) && $upload['complete'] != true) {
+        while (isset($this->upload['complete']) && $this->upload['complete'] != true) {
             sleep(1);
 
-            $upload = Mapbox::uploads($upload['id'])->get();
+            $this->upload = Mapbox::uploads($this->upload['id'])->get();
         }
 
-        $response = Mapbox::uploads($upload['id'])->delete();
+        $response = Mapbox::uploads($this->upload['id'])->delete();
+
+        $uploads = Mapbox::uploads()->list();
 
         $this->assertTrue($response);
+        $this->assertFalse(in_array($this->upload['id'], array_column($uploads, 'id')));
 
-        $this->cleanupTestDatasets([$dataset['id']]);
-        Mapbox::tilesets('test_tileset_3')->delete();
+        $this->upload = null;
     }
 }
