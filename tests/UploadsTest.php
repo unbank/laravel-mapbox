@@ -21,8 +21,8 @@ class UploadsTest extends TestCase
 
         $tilesets = Mapbox::tilesets()->list();
 
-        while (in_array('test_tileset', array_column($tilesets, 'name'))) {
-            Mapbox::tilesets('test_tileset')->delete();
+        while (in_array($this->tileset, array_column($tilesets, 'name'))) {
+            Mapbox::tilesets($this->tileset)->delete();
             sleep(1);
             $tilesets = Mapbox::tilesets()->list();
         }
@@ -55,6 +55,8 @@ class UploadsTest extends TestCase
         Mapbox::features($this->dataset['id'], '123')
             ->insert($this->getFeature());
 
+        $this->tileset = $this->getTileset();
+
         $this->upload = Mapbox::uploads()->create([
             'tileset' => $this->tileset,
             'url' => implode('/', [
@@ -64,6 +66,9 @@ class UploadsTest extends TestCase
             ]),
             'name' => $this->tileset,
         ]);
+
+        dump('Upload:');
+        dump($this->upload);
 
         $this->assertValidUploadResponse($this->upload);
         $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
@@ -76,11 +81,16 @@ class UploadsTest extends TestCase
         Mapbox::features($this->dataset['id'], '123')
             ->insert($this->getFeature());
 
+        $this->tileset = $this->getTileset();
+
         $this->upload = Mapbox::uploads()->create([
             'tileset' => $this->tileset,
             'dataset' => $this->dataset['id'],
             'name' => $this->tileset,
         ]);
+
+        dump('Upload:');
+        dump($this->upload);
 
         $this->assertValidUploadResponse($this->upload);
         $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
@@ -93,6 +103,8 @@ class UploadsTest extends TestCase
         Mapbox::features($this->dataset['id'], '123')
             ->insert($this->getFeature());
 
+        $this->tileset = $this->getTileset();
+
         $this->upload = Mapbox::uploads()->create([
             'tileset' => $this->tileset,
             'url' => implode('/', [
@@ -102,6 +114,9 @@ class UploadsTest extends TestCase
             ]),
             'name' => $this->tileset,
         ]);
+
+        dump('Upload:');
+        dump($this->upload);
 
         $response = Mapbox::uploads($this->upload['id'])->get();
 
@@ -124,6 +139,8 @@ class UploadsTest extends TestCase
         $this->dataset = Mapbox::datasets()->create();
         Mapbox::features($this->dataset['id'], '123')
             ->insert($this->getFeature());
+
+        $this->tileset = $this->getTileset();
 
         $this->upload = Mapbox::uploads()->create([
             'tileset' => $this->tileset,

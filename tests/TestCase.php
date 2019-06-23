@@ -9,7 +9,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected $dataset;
 
-    protected $tileset = 'test_tileset';
+    protected $tileset;
 
     protected $upload;
 
@@ -72,6 +72,11 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         foreach ($datasets as $id) {
             Mapbox::datasets($id)->delete();
         }
+    }
+
+    protected function getTileset()
+    {
+        return 'test_' . str_replace(['.', ' '], '-', microtime());
     }
 
     protected function getFeature()
