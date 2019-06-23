@@ -3,6 +3,7 @@ Laravel Mapbox
 
 [![Build status](https://travis-ci.org/bakerkretzmar/laravel-mapbox.svg?branch=master)](https://travis-ci.org/bakerkretzmar/laravel-mapbox)
 [![StyleCI](https://github.styleci.io/repos/192925375/shield?branch=master&style=flat)](https://github.styleci.io/repos/192925375)
+[![Scrutinizer code quality](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/?branch=master)
 [![Latest stable version](https://img.shields.io/packagist/v/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
 [![Total downloads](https://img.shields.io/packagist/dt/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
 [![MIT license](https://img.shields.io/packagist/l/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://github.com/bakerkretzmar/laravel-mapbox/blob/master/LICENSE)
@@ -180,7 +181,7 @@ Mapbox::uploads($upload_id)->delete();
 Testing
 -------
 
-Before testing the package, create a local `.env.testing` file with valid Mapbox credentials.
+**Note** — Tests hit the real Mapbox API. Before testing the package, set up a local testing environment file with valid Mapbox credentials (`cp .env.testing.example .env.testing` and fill in the blanks).
 
 ```bash
 composer test
