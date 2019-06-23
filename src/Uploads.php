@@ -55,7 +55,9 @@ class Uploads extends MapboxRequest
 
         if (! isset($data['url']) && ! isset($data['dataset'])) {
             throw new RunTimeException('Dataset or URL required');
-        } elseif (isset($data['url']) && isset($data['dataset'])) {
+        }
+
+        if (isset($data['url']) && isset($data['dataset'])) {
             throw new RunTimeException('Dataset OR URL required--not both');
         }
 
