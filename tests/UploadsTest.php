@@ -67,9 +67,6 @@ class UploadsTest extends TestCase
             'name' => $this->tileset,
         ]);
 
-        dump('Upload:');
-        dump($this->upload);
-
         $this->assertValidUploadResponse($this->upload);
         $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
     }
@@ -88,9 +85,6 @@ class UploadsTest extends TestCase
             'dataset' => $this->dataset['id'],
             'name' => $this->tileset,
         ]);
-
-        dump('Upload:');
-        dump($this->upload);
 
         $this->assertValidUploadResponse($this->upload);
         $this->assertEquals(config('laravel-mapbox.username'), $this->upload['owner']);
@@ -114,9 +108,6 @@ class UploadsTest extends TestCase
             ]),
             'name' => $this->tileset,
         ]);
-
-        dump('Upload:');
-        dump($this->upload);
 
         $response = Mapbox::uploads($this->upload['id'])->get();
 
