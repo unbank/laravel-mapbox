@@ -4,9 +4,9 @@ Laravel Mapbox
 [![Build status](https://travis-ci.org/bakerkretzmar/laravel-mapbox.svg?branch=master)](https://travis-ci.org/bakerkretzmar/laravel-mapbox)
 [![StyleCI](https://github.styleci.io/repos/192925375/shield?branch=master&style=flat)](https://github.styleci.io/repos/192925375)
 [![Scrutinizer code quality](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/?branch=master)
+[![Code coverage](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bakerkretzmar/laravel-mapbox/?branch=master)
 [![Latest stable version](https://img.shields.io/packagist/v/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
 [![Total downloads](https://img.shields.io/packagist/dt/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://packagist.org/packages/bakerkretzmar/laravel-mapbox)
-[![MIT license](https://img.shields.io/packagist/l/bakerkretzmar/laravel-mapbox.svg?style=flat)](https://github.com/bakerkretzmar/laravel-mapbox/blob/master/LICENSE)
 
 A lightweight wrapper to make working with [Mapbox](https://docs.mapbox.com/api/maps) Maps service APIs in [Laravel](https://laravel.com) apps a breeze. Based on Matt Fox’s [`mapbox-api-laravel`](https://github.com/BlueVertex/mapbox-api-laravel).
 
