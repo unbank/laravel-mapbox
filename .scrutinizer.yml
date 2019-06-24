@@ -24,6 +24,7 @@ build:
             tests:
                 override:
                     - php-scrutinizer-run
+                    # - phpcs-run
         # tests: true
 
 checks:
@@ -34,7 +35,9 @@ filter:
         - 'tests/*'
 
 tools:
-    external_code_coverage: true
+    external_code_coverage:
+        timeout: 1800
+        runs: 2
 
 # build_failure_conditions:
 #     - 'elements.rating(<= C).new.exists'
