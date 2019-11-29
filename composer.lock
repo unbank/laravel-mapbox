@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50fdcc5556d99fdc17a2dcb30d2f5b76",
+    "content-hash": "b711a85fb22aa1d8e733489650c29b12",
     "packages": [
         {
             "name": "bakerkretzmar/zttp",
-            "version": "dev-master",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bakerkretzmar/zttp.git",
@@ -35,6 +35,7 @@
                     "src/Zttp.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -46,12 +47,9 @@
             ],
             "description": "A developer-experience focused HTTP client, optimized for most common use cases.",
             "keywords": [
-                "guzzle",
+                "Guzzle",
                 "http"
             ],
-            "support": {
-                "source": "https://github.com/bakerkretzmar/zttp/tree/master"
-            },
             "time": "2019-11-29T13:48:22+00:00"
         },
         {
@@ -4965,9 +4963,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "bakerkretzmar/zttp": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
