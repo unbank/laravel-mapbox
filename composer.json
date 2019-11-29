@@ -5,9 +5,15 @@
     "homepage": "https://github.com/bakerkretzmar/laravel-mapbox",
     "type": "library",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bakerkretzmar/zttp.git"
+        }
+    ],
     "require": {
         "php": "^7.2",
-        "kitetail/zttp": "^0.6.0"
+        "bakerkretzmar/zttp": "dev-master"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.26.2",
